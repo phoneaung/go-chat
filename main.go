@@ -5,6 +5,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/template/html/v2"
+	"github.com/gofiber/websocket/v2"
 	"github.com/phoneaung/go-chat/handlers"
 )
 
@@ -22,6 +23,14 @@ func main() {
 
 	// Add app handler route
 	app.Get("/", appHandler.HandleGetIndex)
+
+	// create new webscoket
+	server := NewWebSocket()
+	app.Get("/ws", websocket.New(func(ctx *websocket.Conn) {
+		server.HandleWebSocket(ctx)
+	}))
+
+	go server.HandleMessages()
 
 	// Static route and directory
 	app.Static("/static/", "./static")
