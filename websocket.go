@@ -34,7 +34,8 @@ func (s *WebSocketServer) HandleWebSocket(ctx *websocket.Conn) {
 	for {
 		_, msg, err := ctx.ReadMessage()
 		if err != nil {
-			log.Printf("Read error:", err)
+			// Println
+			log.Fatalf("Read error:", err)
 			break
 		}
 
@@ -56,7 +57,8 @@ func (s *WebSocketServer) HandleMessages() {
 		for client := range s.clients {
 			err := client.WriteMessage(websocket.TextMessage, getMessageTemplate(msg))
 			if err != nil {
-				log.Printf("Write  Error: %v ", err)
+				// Printf
+				log.Fatalf("Write  Error: %v ", err)
 				client.Close()
 				delete(s.clients, client)
 			}

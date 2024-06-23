@@ -1,27 +1,25 @@
 package main
 
 import (
-	"fmt"
-
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/template/html/v2"
 	"github.com/gofiber/websocket/v2"
 	"github.com/phoneaung/go-chat/handlers"
 )
 
 func main() {
-	// Create views engine
-	viewsEngine := html.New("./views", ".html")
 
 	// Start new fiber instance
-	app := fiber.New(fiber.Config{
-		Views: viewsEngine,
+	app := fiber.New()
+
+	// Create a "ping" handler to test the server
+	app.Get("/ping", func(ctx *fiber.Ctx) error {
+		return ctx.SendString("Welcome to fiber")
 	})
 
-	// Create new App Handler
+	// create new App Handler
 	appHandler := handlers.NewAppHandler()
 
-	// Add app handler route
+	// Add appHandler routes
 	app.Get("/", appHandler.HandleGetIndex)
 
 	// create new webscoket
@@ -32,15 +30,6 @@ func main() {
 
 	go server.HandleMessages()
 
-	// Static route and directory
-	app.Static("/static/", "./static")
-
-	// Create a "ping" handler to test the server
-	app.Get("/ping", func(ctx *fiber.Ctx) error {
-		return ctx.SendString("Welcome to fiber!")
-	})
-
 	// Start the http server
 	app.Listen(":3000")
-	fmt.Println("Hello worlds!")
 }
